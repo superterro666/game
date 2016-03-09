@@ -5,9 +5,15 @@
  */
 package juego;
 
+import control.Teclado;
+import graficos.Pantalla;
 import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 import javax.swing.JFrame;
 
 /**
@@ -24,10 +30,19 @@ public class Juego extends Canvas implements Runnable{
    private static int fps = 0;
    private static final String NOMBRE="Juego";  
    private static volatile Boolean enFuncionamiento = false;
+   private static Teclado teclado;
+   private static Pantalla pantalla;
+   private static BufferedImage imagen = new BufferedImage(ANCHO,ALTO, BufferedImage.TYPE_INT_RGB);
+   private static int[] pixeles =((DataBufferInt) imagen.getRaster().getDataBuffer()).getData();
+   private static int x=0;
+   private static int y=0;
    
    public Juego()
    {
        setPreferredSize(new Dimension(ANCHO,ALTO));
+       
+       pantalla = new Pantalla(ANCHO,ALTO);
+       
        ventana = new JFrame();
        ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
        ventana.setResizable(false);
@@ -36,6 +51,9 @@ public class Juego extends Canvas implements Runnable{
        ventana.pack();
        ventana.setLocationRelativeTo(null);
        ventana.setVisible(true);
+       
+       teclado= new Teclado();
+       addKeyListener(teclado);
        
        
    }
@@ -56,10 +74,48 @@ public class Juego extends Canvas implements Runnable{
     }
     
     private void actualizar(){
+        teclado.actualizar();
+        if(teclado.arriba)
+        {
+           y++;
+        }
+        
+         if(teclado.abajo)
+        {
+           y--;
+        }
+          
+        if(teclado.izquierda)
+        {
+            x++;
+        }
+        
+        if(teclado.derecha)
+        {
+            x--;
+        }
         aps++;
     }
     
     private void mostrar(){
+        BufferStrategy estrategia = getBufferStrategy();
+        if(estrategia==null){
+        createBufferStrategy(3);
+        return;
+        }
+        pantalla.limpiar();
+        pantalla.mostrar(x,y);
+        
+        System.arraycopy(pantalla.pixeles, 0, pixeles, 0, pixeles.length);
+        
+        Graphics g = estrategia.getDrawGraphics();
+        g.drawImage(imagen, 0, 0, getWidth(), getHeight(), null);
+        g.dispose();
+        estrategia.show();
+        
+      //   for (int i = 0; i < pixeles.length; i++) {
+      //      pixeles[i]=pantalla.pixeles[i];
+      //  }
         fps++;
     }
     
@@ -87,7 +143,7 @@ public class Juego extends Canvas implements Runnable{
         double tiempoTranscurrido;
         double delta =0;
        
-      
+        requestFocus();
         while(enFuncionamiento)
         {
             final long inicioBucle = System.nanoTime();

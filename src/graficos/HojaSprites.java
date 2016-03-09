@@ -18,9 +18,11 @@ import javax.imageio.ImageIO;
 public class HojaSprites {
     private int ancho;
     private int alto;
-    private int[] pixeles;
+    public int[] pixeles;
     
-    
+    //colecion hoja de sprites
+    public static HojaSprites desierto= new HojaSprites("/resources/texturas/texturas_1.png",250,125);
+    // fin de la coleccion
    
 
     public HojaSprites(String ruta,int ancho, int alto) {
@@ -36,5 +38,11 @@ public class HojaSprites {
             
             ex.printStackTrace();
         }
+    }
+    
+    public int obtenAncho(){
+        
+            return ancho;
+       
     }
 }
