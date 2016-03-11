@@ -14,11 +14,12 @@ public final class Sprite {
     private int x;
     private int y;
     public int[] pixeles;
-    private final HojaSprites hoja;
+    private  HojaSprites hoja;
     
     //Coleccion de sprites
-    public static Sprite asfalto = new Sprite(32,0,0,HojaSprites.desierto);
-    
+    public final static Sprite VACIO = new Sprite(32,0);
+    public final static Sprite ASFALTO = new Sprite(32,0,0,HojaSprites.desierto);
+   // public final static Sprite VACIO = new Sprite(32,0,7,HojaSprites.desierto);
     // fin de la coleccion
     
     public Sprite(final int lado, final int fila, final int columna, final HojaSprites hoja ){
@@ -33,5 +34,18 @@ public final class Sprite {
                 pixeles[ y+x * lado]= hoja.pixeles[(x+this.x) + (y + this.y) * hoja.obtenAncho()];
             }
         }
+    }
+    
+    public Sprite(final int lado, final int color){
+        this.lado=lado;
+        pixeles= new int [lado*lado];
+        for (int i = 0; i < pixeles.length; i++) {
+           pixeles[i]=color; 
+        }
+    }
+    
+    
+    public int obtenLado(){
+     return lado;
     }
 }
