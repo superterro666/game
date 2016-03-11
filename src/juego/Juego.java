@@ -15,6 +15,8 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import javax.swing.JFrame;
+import mapas.MapaGenerado;
+import mapas.Mapas;
 
 /**
  *
@@ -36,12 +38,14 @@ public class Juego extends Canvas implements Runnable{
    private static int[] pixeles =((DataBufferInt) imagen.getRaster().getDataBuffer()).getData();
    private static int x=0;
    private static int y=0;
+   private static Mapas mapa;
    
    public Juego()
    {
        setPreferredSize(new Dimension(ANCHO,ALTO));
        
        pantalla = new Pantalla(ANCHO,ALTO);
+       mapa = new MapaGenerado(128,128);
        
        ventana = new JFrame();
        ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -104,7 +108,8 @@ public class Juego extends Canvas implements Runnable{
         return;
         }
         pantalla.limpiar();
-        pantalla.mostrar(x,y);
+        mapa.mostrar(x, y ,pantalla);
+        
         
         System.arraycopy(pantalla.pixeles, 0, pixeles, 0, pixeles.length);
         
